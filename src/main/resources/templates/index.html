@@ -5,8 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Users</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+          integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
     <link rel="stylesheet" href="../static/css/shards.min.css">
 </head>
 <body>
@@ -20,6 +22,24 @@
 <form action="#" th:action="@{/lightoff}" method="get">
     <div class="container mt-5 ">
         <input type="submit" class="btn btn-outline-dark btn-lg btn-block" value="LIGHT OFF">
+    </div>
+</form>
+
+<form action="#" th:action="@{/lights}" method="post" th:object="${dto}">
+    <div class="container mt-5 ">
+        <div class="form-group">
+            <label for="startDate">Start date</label>
+            <input type="text" class="form-control"
+                   th:field="*{startDate}" id="startDate">
+        </div>
+        <div class="form-group">
+            <label for="endDate">End date</label>
+            <input type="text" class="form-control"
+                   th:field="*{endDate}" id="endDate">
+        </div>
+        <div class="form-group">
+            <input type="submit" class="btn btn-outline-primary btn-lg btn-block" value="SCHEDULE">
+        </div>
     </div>
 </form>
 
