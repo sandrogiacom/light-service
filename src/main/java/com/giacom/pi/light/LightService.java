@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -16,18 +18,17 @@ import org.springframework.stereotype.Service;
 public class LightService {
 
     private TaskScheduler scheduler;
+    private static List<String> schedules;
 
     public LightService(TaskScheduler scheduler) {
         this.scheduler = scheduler;
     }
 
     public String makeTheLightOn() {
-        System.out.println("LightService.makeTheLightOn");
         return executePython("light-on.py");
     }
 
     public String makeTheLightOff() {
-        System.out.println("LightService.makeTheLightOff");
         return executePython("light-off.py");
     }
 
@@ -47,21 +48,25 @@ public class LightService {
     }
 
     public void schedule(Date start, Date stop) {
-        System.out.println("LightService.schedule \n");
+        schedules = new ArrayList<>();
         scheduleOn(start);
         scheduleOff(stop);
     }
 
     private void scheduleOn(Date start) {
-        System.out.println("LightService.scheduleOn " + start);
         scheduler.schedule(() -> makeTheLightOn()
                 , start);
+        schedules.add(" [ON] " + truncateDateTime(start));
     }
 
     public void scheduleOff(Date stop) {
-        System.out.println("LightService.scheduleOff " + stop);
         scheduler.schedule(() -> makeTheLightOff()
                 , stop);
+        schedules.add("[OFF] " + truncateDateTime(stop));
+    }
+
+    private String truncateDateTime(Date date) {
+        return new SimpleDateFormat("dd/MM/yyyy HH:mm").format(date);
     }
 
     private List<String> readProcessOutput(InputStream inputStream) throws IOException {
@@ -69,6 +74,10 @@ public class LightService {
             return output.lines()
                     .collect(Collectors.toList());
         }
+    }
+
+    public List<String> getMemory() {
+        return schedules;
     }
 
 }

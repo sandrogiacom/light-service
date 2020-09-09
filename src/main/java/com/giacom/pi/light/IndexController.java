@@ -12,6 +12,11 @@ public class IndexController {
 
     private static final long TEN_MINUTES = 10;
     private static final long TWO_MINUTES = 2;
+    private final LightService lightService;
+
+    public IndexController(LightService lightService) {
+        this.lightService = lightService;
+    }
 
     @GetMapping
     public String makeTheLightOn(Model model) {
@@ -19,6 +24,7 @@ public class IndexController {
         FormDTO dto = new FormDTO();
         dto.setStartDate(dt.plusMinutes(TWO_MINUTES));
         dto.setEndDate(dt.plusMinutes(TEN_MINUTES));
+        dto.setSchedules(lightService.getMemory());
         model.addAttribute("dto", dto);
         return "index";
     }

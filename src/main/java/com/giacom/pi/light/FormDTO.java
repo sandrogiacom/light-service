@@ -1,10 +1,12 @@
 package com.giacom.pi.light;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class FormDTO {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+    private List<String> schedules;
 
     public LocalDateTime getStartDate() {
         return startDate;
@@ -20,5 +22,13 @@ public class FormDTO {
 
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
+    }
+
+    public List<String> getSchedules() {
+        return schedules;
+    }
+
+    public void setSchedules(List<String> schedules) {
+        this.schedules = schedules;
     }
 }
