@@ -9,19 +9,32 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ScheduledFuture;
 import java.util.stream.Collectors;
 
 import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
 
 @Service
 public class LightService {
 
-    private TaskScheduler scheduler;
-    private static List<String> schedules;
+    private final TaskScheduler scheduler;
+    private final ThreadPoolTaskScheduler threadPoolTaskScheduler;
 
-    public LightService(TaskScheduler scheduler) {
+    private static List<String> schedules;
+    private List<ScheduledFuture> tasks = new ArrayList<>();
+
+    public LightService(TaskScheduler scheduler, ThreadPoolTaskScheduler threadPoolTaskScheduler) {
         this.scheduler = scheduler;
+        this.threadPoolTaskScheduler = threadPoolTaskScheduler;
+        this.threadPoolTaskScheduler.setRemoveOnCancelPolicy(true);
+    }
+
+    public void schedule(Date start, Date stop) {
+        schedules = new ArrayList<>();
+        scheduleOn(start);
+        scheduleOff(stop);
     }
 
     public String makeTheLightOn() {
@@ -29,7 +42,16 @@ public class LightService {
     }
 
     public String makeTheLightOff() {
+        clearSchedules();
         return executePython("light-off.py");
+    }
+
+    public void cancelAllSchedule() {
+        for (ScheduledFuture task : tasks) {
+            task.cancel(true);
+        }
+        tasks.clear();
+        clearSchedules();
     }
 
     private String executePython(String name) {
@@ -47,21 +69,17 @@ public class LightService {
         return results.toString();
     }
 
-    public void schedule(Date start, Date stop) {
-        schedules = new ArrayList<>();
-        scheduleOn(start);
-        scheduleOff(stop);
-    }
-
     private void scheduleOn(Date start) {
-        scheduler.schedule(() -> makeTheLightOn()
+        ScheduledFuture<?> schedule = scheduler.schedule(() -> makeTheLightOn()
                 , start);
+        tasks.add(schedule);
         schedules.add(" [ON] " + truncateDateTime(start));
     }
 
-    public void scheduleOff(Date stop) {
-        scheduler.schedule(() -> makeTheLightOff()
+    private void scheduleOff(Date stop) {
+        ScheduledFuture<?> schedule = scheduler.schedule(() -> makeTheLightOff()
                 , stop);
+        tasks.add(schedule);
         schedules.add("[OFF] " + truncateDateTime(stop));
     }
 
@@ -76,8 +94,12 @@ public class LightService {
         }
     }
 
-    public List<String> getMemory() {
+    public List<String> getSchedules() {
         return schedules;
+    }
+
+    private void clearSchedules() {
+        schedules.clear();
     }
 
 }

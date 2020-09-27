@@ -24,7 +24,7 @@ public class IndexController {
         FormDTO dto = new FormDTO();
         dto.setStartDate(dt.plusMinutes(TWO_MINUTES));
         dto.setEndDate(dt.plusMinutes(TEN_MINUTES));
-        dto.setSchedules(lightService.getMemory());
+        dto.setSchedules(lightService.getSchedules());
         model.addAttribute("dto", dto);
         return "index";
     }

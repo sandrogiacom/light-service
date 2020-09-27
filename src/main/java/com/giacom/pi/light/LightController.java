@@ -6,6 +6,7 @@ import java.util.Date;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class LightController {
@@ -28,11 +29,18 @@ public class LightController {
         return "redirect:/";
     }
 
-    @PostMapping("/lights")
-    public String makeTheLightSchedulle(FormDTO dto) {
-        Date dateStart = Date.from(dto.getStartDate().atZone(ZoneId.systemDefault()).toInstant());
-        Date dateEnd = Date.from(dto.getEndDate().atZone(ZoneId.systemDefault()).toInstant());
-        lightService.schedule(dateStart, dateEnd);
+    @PostMapping(value = "/schedule")
+    public String scheduleOn(FormDTO dto, @RequestParam(value = "action") String action) {
+        switch (action) {
+            case "schedule":
+                Date dateStart = Date.from(dto.getStartDate().atZone(ZoneId.systemDefault()).toInstant());
+                Date dateEnd = Date.from(dto.getEndDate().atZone(ZoneId.systemDefault()).toInstant());
+                lightService.schedule(dateStart, dateEnd);
+                break;
+            case "cancel":
+                lightService.cancelAllSchedule();
+                break;
+        }
         return "redirect:/";
     }
 
