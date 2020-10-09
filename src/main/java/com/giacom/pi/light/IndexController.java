@@ -22,8 +22,8 @@ public class IndexController {
     public String makeTheLightOn(Model model) {
         LocalDateTime dt = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
         FormDTO dto = new FormDTO();
-        dto.setStartDate(dt.plusMinutes(TWO_MINUTES));
-        dto.setEndDate(dt.plusMinutes(TEN_MINUTES));
+        dto.setStartDate(dt.plusMinutes(TWO_MINUTES).plusDays(1).plusHours(4));
+        dto.setEndDate(dt.plusMinutes(TEN_MINUTES).plusDays(1).plusHours(4));
         dto.setSchedules(lightService.getSchedules());
         model.addAttribute("dto", dto);
         return "index";
