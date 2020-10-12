@@ -1,7 +1,8 @@
 package com.giacom.pi.light;
 
-import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,8 +34,25 @@ public class LightController {
     public String scheduleOn(FormDTO dto, @RequestParam(value = "action") String action) {
         switch (action) {
             case "schedule":
-                Date dateStart = Date.from(dto.getStartDate().atZone(ZoneId.systemDefault()).toInstant());
-                Date dateEnd = Date.from(dto.getEndDate().atZone(ZoneId.systemDefault()).toInstant());
+                Calendar calendarStart = Calendar.getInstance(TimeZone.getDefault());
+                calendarStart.set(
+                        dto.getStartDate().getYear(),
+                        dto.getStartDate().getMonthValue() - 1,
+                        dto.getStartDate().getDayOfMonth(),
+                        dto.getStartTime().getHour(),
+                        dto.getStartTime().getMinute()
+                );
+                Date dateStart = calendarStart.getTime();
+
+                Calendar calendarEnd = Calendar.getInstance(TimeZone.getDefault());
+                calendarEnd.set(
+                        dto.getEndDate().getYear(),
+                        dto.getEndDate().getMonthValue() - 1,
+                        dto.getEndDate().getDayOfMonth(),
+                        dto.getEndTime().getHour(),
+                        dto.getEndTime().getMinute()
+                );
+                Date dateEnd = calendarEnd.getTime();
                 lightService.schedule(dateStart, dateEnd);
                 break;
             case "cancel":

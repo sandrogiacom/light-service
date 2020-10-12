@@ -1,7 +1,7 @@
 package com.giacom.pi.light;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class IndexController {
 
-    private static final long TEN_MINUTES = 10;
-    private static final long TWO_MINUTES = 2;
     private final LightService lightService;
 
     public IndexController(LightService lightService) {
@@ -20,10 +18,12 @@ public class IndexController {
 
     @GetMapping
     public String makeTheLightOn(Model model) {
-        LocalDateTime dt = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+        LocalDate dt = LocalDate.now();
         FormDTO dto = new FormDTO();
-        dto.setStartDate(dt.plusMinutes(TWO_MINUTES).plusDays(1).plusHours(4));
-        dto.setEndDate(dt.plusMinutes(TEN_MINUTES).plusDays(1).plusHours(4));
+        dto.setStartDate(dt.plusDays(1));
+        dto.setEndDate(dt.plusDays(1));
+        dto.setStartTime(LocalTime.of(0, 30));
+        dto.setEndTime(LocalTime.of(05, 30));
         dto.setSchedules(lightService.getSchedules());
         model.addAttribute("dto", dto);
         return "index";
