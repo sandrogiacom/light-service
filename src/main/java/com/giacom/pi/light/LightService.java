@@ -22,7 +22,7 @@ public class LightService {
     private final TaskScheduler scheduler;
     private final ThreadPoolTaskScheduler threadPoolTaskScheduler;
 
-    private static List<String> schedules;
+    private static List<String> schedules = new ArrayList<>();
     private List<ScheduledFuture> tasks = new ArrayList<>();
 
     public LightService(TaskScheduler scheduler, ThreadPoolTaskScheduler threadPoolTaskScheduler) {
@@ -64,7 +64,7 @@ public class LightService {
             results = readProcessOutput(process.getInputStream());
             System.out.println(results);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         return results.toString();
     }
