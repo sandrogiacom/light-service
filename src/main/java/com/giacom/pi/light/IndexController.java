@@ -23,7 +23,7 @@ public class IndexController {
         dto.setStartDate(dt.plusDays(1));
         dto.setEndDate(dt.plusDays(1));
         dto.setStartTime(LocalTime.of(0, 30));
-        dto.setEndTime(LocalTime.of(05, 30));
+        dto.setEndTime(LocalTime.of(05, 00));
         dto.setSchedules(lightService.getSchedules());
         model.addAttribute("dto", dto);
         return "index";
